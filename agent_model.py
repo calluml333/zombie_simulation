@@ -30,11 +30,10 @@ def log_message(message):
 #=========================================================#
  
  
-def iterate(X):
-    global X_names
-    global zi
-    X1 = np.zeros((ny, nx))
-    X1[1:ny-1, 1:nx-1]  = np.full((ny-2, nx-2), empty)
+def iterate(X, name_grid, zombie_name_count):
+
+    # X1 = np.zeros((ny, nx))
+    # X1[1:ny-1, 1:nx-1]  = np.full((ny-2, nx-2), empty)
 
     neighbourhood_new = [i for i in neighbourhood]
     np.random.shuffle(neighbourhood_new)
@@ -42,56 +41,67 @@ def iterate(X):
 
     for ix in range(1,nx-1):
         for iy in range(1,ny-1):
+            
             if X[iy,ix] == human:
-                X1[iy,ix] = human
-                if X_names[iy,ix] not in names:
+                if name_grid[iy,ix] not in names:
                     for dx,dy in neighbourhood_new:
+                        
                         if X[iy+dy,ix+dx] == zombie and np.random.random() <= p_b:
-                            X1[iy,ix] = zombie
-                            X[iy,ix] = zombie
-                            X_names[iy,ix] = generate_name("z", zi)
-                            zi += 1
-                            names.append(X_names[iy,ix])
+                            X, name_grid, zombie_name_count = human_to_zombie(X, iy, ix, name_grid, zombie_name_count)
+                            names.append(name_grid[iy,ix])
                             break
+                       
                         elif X[iy+dy,ix+dx] == zombie and np.random.random() <= p_k:
-                            X[iy+dy,ix+dx] = empty
-                            X1[iy+dy,ix+dx] = empty
-                            X_names[iy+dy,ix+dx] = generate_name('e')
+                            X, name_grid, zombie_name_count = human_kill_zombie(X, iy+dy, ix+dx, name_grid, zombie_name_count)
+                        
                         elif X[iy+dy,ix+dx] == empty and np.random.random() <= mh:
-                            X1[iy+dy,ix+dx] = human
-                            X[iy+dy,ix+dx] = human
-                            X_names[iy+dy,ix+dx] = X_names[iy,ix]
-                            X1[iy,ix] = empty
-                            X[iy,ix] = empty
-                            X_names[iy,ix] = generate_name('e')
-                            names.append(X_names[iy+dy,ix+dx])
+                            X, name_grid = move_to_empty(X, iy, ix, dy, dx, name_grid, human)
+                            names.append(name_grid[iy+dy,ix+dx])
                             break            
+
             elif X[iy,ix] == zombie:
-                X1[iy,ix] = zombie
-                if X_names[iy,ix] not in names:
+                if name_grid[iy,ix] not in names:
                     for dx,dy in neighbourhood_new:
+                        
                         if X[iy+dy,ix+dx] == human and np.random.random() <= p_b:
-                            X1[iy+dy,ix+dx] = zombie
-                            X[iy+dy,ix+dx] = zombie
-                            X_names[iy+dy,ix+dx] = generate_name("z", zi)
-                            zi += 1
-                            names.append(X_names[iy+dy,ix+dx])
+                            X, name_grid, zombie_name_count = human_to_zombie(X, iy+dy, ix+dx, name_grid, zombie_name_count)
+                            names.append(name_grid[iy+dy,ix+dx])
+                        
                         elif X[iy+dy,ix+dx] == human and np.random.random() <= p_k:
-                            X1[iy,ix] = empty
-                            X[iy,ix] = empty
-                            X_names[iy,ix] = generate_name('e')
+                            X, name_grid, zombie_name_count = human_kill_zombie(X, iy, ix, name_grid, zombie_name_count)
+
                         elif X[iy+dy,ix+dx] == empty and np.random.random() <= mz:
-                            X1[iy+dy,ix+dx] = zombie
-                            X[iy+dy,ix+dx] = zombie
-                            X_names[iy+dy,ix+dx] = X_names[iy,ix]
-                            X1[iy,ix] = empty
-                            X[iy,ix] = empty
-                            X_names[iy,ix] = generate_name('e')
-                            names.append(X_names[iy+dy,ix+dx])
+                            X, name_grid = move_to_empty(X, iy, ix, dy, dx, name_grid, zombie)
+                            names.append(name_grid[iy+dy,ix+dx])
                             break
 
-    adjust_counts(X1)
-    return X1
+    adjust_counts(X)
+    return X, name_grid, zombie_name_count
+
+
+def human_to_zombie(X, iy, ix, name_grid, zombie_name_count):
+    X[iy,ix] = zombie
+    name_grid[iy,ix] = generate_name("z", zombie_name_count)
+    zombie_name_count += 1
+
+    return X, name_grid, zombie_name_count
+
+
+def move_to_empty(X, iy, ix, dy, dx, name_grid, agent_type):
+    X[iy+dy,ix+dx] = agent_type
+    name_grid[iy+dy,ix+dx] = name_grid[iy,ix]
+    
+    X[iy,ix] = empty
+    name_grid[iy,ix] = generate_name('e')
+
+    return X, name_grid
+
+
+def human_kill_zombie(X, iy, ix, name_grid, zombie_name_count):
+    X[iy,ix] = empty
+    name_grid[iy,ix] = generate_name('e')
+
+    return X, name_grid, zombie_name_count
 
 
 def adjust_counts(grid):
@@ -161,9 +171,11 @@ def generate_name(agent_type, number=None):
 
 
 def animate(i):
+    global X_names
+    global zi
     ax.set_title("{} Humans || {} Zombies || Total: {}".format(nh, nz, nh+nz))
     im.set_data(animate.X)
-    animate.X = iterate(animate.X) 
+    animate.X , X_names, zi = iterate(animate.X, X_names, zi) 
     
 
 #=========================================================#
@@ -184,16 +196,16 @@ bounds = [0,1,2,3,4]
 norm = colors.BoundaryNorm(bounds, cmap.N)
 
 # The initial number of humans and zombies.
-nh, nz = 500, 5
+nh, nz = 1, 1
 
 # Probability a human will kill a zombie, and that a zombie will bite a human
-p_k, p_b = 0.5, 0.8
+p_k, p_b = 0.5, 0.3
 
 # Probability that a human and zombie will move position, respectively.
 mh, mz = 0.3, 0.05
 
 # Forest size (number of cells in x and y directions).
-nx, ny = 100, 100
+nx, ny = 5, 5
 
 # Initialise ints to be used in the names for each of the agent types
 hi, zi = 0, 0
