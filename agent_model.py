@@ -12,18 +12,18 @@ import logging
 
 np.random.seed(42)
 
-# logging  
-LOG = os.getcwd() + "/tmp/ccd.log"                                                     
-logging.basicConfig(filename=LOG, filemode="w", level=logging.DEBUG)  
+# # logging  
+# LOG = os.getcwd() + "/tmp/ccd.log"                                                     
+# logging.basicConfig(filename=LOG, filemode="w", level=logging.DEBUG)  
 
-# console handler  
-console = logging.StreamHandler()  
-console.setLevel(logging.ERROR)  
-logging.getLogger("").addHandler(console)
+# # console handler  
+# console = logging.StreamHandler()  
+# console.setLevel(logging.ERROR)  
+# logging.getLogger("").addHandler(console)
 
-def log_message(message):
-    logger = logging.getLogger(__name__)
-    logger.debug(message)
+# def log_message(message):
+#     logger = logging.getLogger(__name__)
+#     logger.debug(message)
 
 #=========================================================#
 '''--------------------- Functions ---------------------'''
@@ -196,16 +196,16 @@ bounds = [0,1,2,3,4]
 norm = colors.BoundaryNorm(bounds, cmap.N)
 
 # The initial number of humans and zombies.
-nh, nz = 1, 1
+nh, nz = 500, 2
 
 # Probability a human will kill a zombie, and that a zombie will bite a human
-p_k, p_b = 0.5, 0.3
+p_k, p_b = 0.5, 0.4
 
 # Probability that a human and zombie will move position, respectively.
 mh, mz = 0.3, 0.05
 
 # Forest size (number of cells in x and y directions).
-nx, ny = 5, 5
+nx, ny = 50, 50
 
 # Initialise ints to be used in the names for each of the agent types
 hi, zi = 0, 0
