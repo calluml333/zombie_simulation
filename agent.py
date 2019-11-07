@@ -4,7 +4,7 @@ Module that contains the Agent class and relevant subclasses for the zombie outb
 
 class Agent:
     def __init__(self, name, position, speed=0.5):
-        self.__name = name
+        self._name = name
         self.position = position
         self.speed = speed
     
@@ -12,12 +12,12 @@ class Agent:
 
     @property
     def name(self):
-        return self.__name
+        return self._name
 
     @name.setter
     def name(self, value):
         if 0 <= value < 100000:
-            self.__name = value
+            self._name = value
         elif value < 0 or value > 100000:
             raise ValueError("The id value must be of type int and in the range [0, 100000]")
         elif type(value) != int:
@@ -47,69 +47,29 @@ class Agent:
         elif value <= 0.0 or speed > 1.0 :
             raise ValueError("Speed must be in the range (0, 1]")
         elif type(value) != int:
-            raise TypeError("Speed must be either an integer or a float")
-
+            raise TypeError("Speed must be either an integer or a float")   
     
-    def __generate_name(self, value):
-        print(value)
-        if value < 10:
-            return self.__agentType + "_0000" + str(value)
-        elif 10 <= value < 100:
-            return self.__agentType + "_000" + str(value)
-        elif 100 <= value < 1000:
-            return self.__agentType + "_00" + str(value)
-        elif 1000 <= value < 10000:
-            return self.__agentType + "_0" + str(value)
-        elif 10000 <= value < 100000:
-            return self.__agentType + "_" + str(value)
-        elif value < 0 or value > 100000:
-            raise ValueError("The id value must be of type int and in the range [0, 100000]")
-        elif type(value) != int:
-            raise TypeError("The id value must be of type int and in the range [0, 100000)")
-        
     def move_position(self, neighbour_position):
         self._position = tuple([sum(x) for x in zip(self._position, neighbour_position)])
         
-    def move_north(self):
-        self._position = tuple([sum(x) for x in zip(self._position, (-1, 0))])
-    
-    def move_north_east(self):
-        self._position = tuple([sum(x) for x in zip(self._position, (-1, 1))])
-
-    def move_east(self):
-        self._position = tuple([sum(x) for x in zip(self._position, (0, 1))])
-
-    def move_south_east(self):
-        self._position = tuple([sum(x) for x in zip(self._position, (1, 1))])
-
-    def move_south(self):
-        self._position = tuple([sum(x) for x in zip(self._position, (1, 0))])
-
-    def move_south_west(self):
-        self._position = tuple([sum(x) for x in zip(self._position, (1, -1))])
-
-    def move_west(self):
-        self._position = tuple([sum(x) for x in zip(self._position, (0, -1))])
-
-    def move_north_west(self):
-        self._position = tuple([sum(x) for x in zip(self._position, (-1, -1))])
-
 
 class Human(Agent):
-    def __init__(self, obj_id, position, speed=0.7):
-        Agent.__init__(self, obj_id, position, speed)
-        self.agent_type = 'h'
+    def __init__(self, name, position, speed=0.7):
+        Agent.__init__(self, name, position, speed)
+        self.agent_name = Agent.agent_name(self)
+        self.__agent_type = 'h'
+
 
 
 class Zombie(Agent):
-    def __init__(self, obj_id, position, speed=0.3):
-        Agent.__init__(self, obj_id, position, speed)
-        self.agent_type = 'z'
+    def __init__(self, name, position, speed=0.3, was_human=False):
+        Agent.__init__(self, name, position, speed )
+        self.__agent_type = 'z'
+        self.was_human = was_human
 
 
-# new = Agent(1,(2,3))
-# print(new.name)
-# print(new.position)
-# print(new.speed)
-# new.name = 2
-# print(new.name)
+new = Agent(1,(2,3))
+print(new.name)
+print(new.position)
+print(new.speed)
+print(new.agent_name())

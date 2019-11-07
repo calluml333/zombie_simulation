@@ -36,7 +36,6 @@ def iterate(X, name_grid, zombie_name_count):
     # X1[1:ny-1, 1:nx-1]  = np.full((ny-2, nx-2), empty)
 
     neighbourhood_new = [i for i in neighbourhood]
-    np.random.shuffle(neighbourhood_new)
     names = []
 
     for ix in range(1,nx-1):
@@ -44,6 +43,7 @@ def iterate(X, name_grid, zombie_name_count):
             
             if X[iy,ix] == human:
                 if name_grid[iy,ix] not in names:
+                    np.random.shuffle(neighbourhood_new)
                     for dx,dy in neighbourhood_new:
                         
                         if X[iy+dy,ix+dx] == zombie and np.random.random() <= p_b:
@@ -61,6 +61,7 @@ def iterate(X, name_grid, zombie_name_count):
 
             elif X[iy,ix] == zombie:
                 if name_grid[iy,ix] not in names:
+                    np.random.shuffle(neighbourhood_new)
                     for dx,dy in neighbourhood_new:
                         
                         if X[iy+dy,ix+dx] == human and np.random.random() <= p_b:
