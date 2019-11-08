@@ -1,14 +1,53 @@
 """
-Module that contains the Agent class and relevant subclasses for the zombie outbreak simulation.
+Module that contains the various required classes.
 """
 
+class Environment:
+    """
+    A class that defines the behaviour of the environment that will be used 
+    for the simulation.
+    """
+    def __init__(self, x, y, n_humans, n_zombies):
+        self.x = x
+        self.y = y
+        self.n_humans = n_humans
+        self.n_zombies = n_zombies
+
+    @property
+    def x(self):
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        if type(value) == int or type(value) == float:
+            self._x = value
+        else:
+            raise TypeError("x is required to be either an int or a float")
+
+    @property
+    def y(self):
+        return self._y
+
+    @y.setter
+    def y(self, value):
+        if type(value) == int or type(value) == float:
+            self._y = value
+        else:
+            raise TypeError("y is required to be either an int or a float")
+
+
 class Agent:
+    """
+    A class that defines the behaviour of the agents that are interacting within the
+    environment during the simulation.
+    """
     def __init__(self, name, position, speed=0.5):
         self._name = name
         self.position = position
         self.speed = speed
     
     __agentType = 'a'
+    colour = (0, 0, 0)
 
     @property
     def name(self):
@@ -54,22 +93,23 @@ class Agent:
         
 
 class Human(Agent):
+    """
+    A subclass  of agent, specifying a "Human" agent and it's behaviour.
+    """
     def __init__(self, name, position, speed=0.7):
         Agent.__init__(self, name, position, speed)
-        self.agent_name = Agent.agent_name(self)
         self.__agent_type = 'h'
 
 
-
 class Zombie(Agent):
+    """
+    A subclass  of agent, specifying a "Zpmbie" agent and it's behaviour.
+    """
     def __init__(self, name, position, speed=0.3, was_human=False):
         Agent.__init__(self, name, position, speed )
         self.__agent_type = 'z'
         self.was_human = was_human
 
 
-new = Agent(1,(2,3))
-print(new.name)
-print(new.position)
-print(new.speed)
-print(new.agent_name())
+if __name__ == "__main__":
+    pass
