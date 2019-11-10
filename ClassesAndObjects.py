@@ -46,8 +46,8 @@ class Agent:
         self.position = position
         self.speed = speed
     
-    __agentType = 'a'
-    colour = (0, 0, 0)
+    _agent_type = 'a'
+    _color = (0, 0, 0)
 
     @property
     def name(self):
@@ -98,7 +98,9 @@ class Human(Agent):
     """
     def __init__(self, name, position, speed=0.7):
         Agent.__init__(self, name, position, speed)
-        self.__agent_type = 'h'
+        self._agent_type = 'h'
+        
+    _color = (0,0,255) 
 
 
 class Zombie(Agent):
@@ -107,8 +109,10 @@ class Zombie(Agent):
     """
     def __init__(self, name, position, speed=0.3, was_human=False):
         Agent.__init__(self, name, position, speed )
-        self.__agent_type = 'z'
+        self._agent_type = 'z'
         self.was_human = was_human
+
+    _color = (255,0,0)
 
 
 if __name__ == "__main__":

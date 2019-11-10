@@ -10,7 +10,9 @@ class Tests(unittest.TestCase):
 
     def test_name(self):
         a = Agent(1, (3, 3))
-        self.assertEqual(a.name, 1)     
+        self.assertEqual(a.name, 1)
+        self.assertEqual(a._agent_type, 'a')
+     
 
 
     def test_name_not_correct_type(self):
@@ -58,20 +60,30 @@ class Tests(unittest.TestCase):
         a.move_position((1,1))
         self.assertEqual(a.position, (1, 1))
 
+    def test_color(self):
+        a = Agent(1, (0,0))
+        self.assertEqual(a.color, (0,0,0))
+
 
     def test_human(self):
         h = Human(1, (0, 0))
         self.assertEqual(h.name, 1)
         self.assertEqual(h.position, (0, 0))
         self.assertEqual(h.speed, 0.7)
+        self.assertEqual(h._color, (0,0,255))
+        self.assertEqual(h._agent_type, 'h')
 
 
     def test_zombie(self):
         z = Zombie(1, (0, 0))
         self.assertEqual(z.name, 1)
+        self.assertEqual(z.position, (0, 0))
         self.assertEqual(z.speed, 0.3)
+        self.assertEqual(z._color, (255,0,0))
+        self.assertEqual(z._agent_type, 'z')
 
     
+
     def test_zombie_was_human_true(self):
         z = Zombie(1, (0, 0), was_human=True)
         self.assertEqual(z.was_human, True)
