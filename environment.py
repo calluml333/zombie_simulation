@@ -54,7 +54,7 @@ class Environment:
         return norm
     
     def is_touching(self, agent1, agent2):
-        return self.calc_norm(agent1.position, agent2.position) < (agent1.size + agent2.size)
+        return self.calc_norm((agent1.x, agent1.y), (agent2.x, agent2.y)) < (agent1.size + agent2.size)
 
     def handle_collisions(self, agents):
         humans, zombies = agents
@@ -66,7 +66,7 @@ class Environment:
                         pass
                     else:
                         if self.is_touching(human, other_agent):
-                            # We have a collission
+                            # We have a collision
                             pass
         return humans, zombies
                             
@@ -76,8 +76,9 @@ class Environment:
         for agent_dict in agents:
             for agent_id in agent_dict:
                 agent = agent_dict[agent_id]
-                pygame.draw.circle(self.game_display, agent.color, agent.position, agent.size)
-                # agent.move()
+                pygame.draw.circle(self.game_display, agent.color, (agent.x, agent.y), agent.size)
+                neighbour = (random.randrange(-1, 2), random.randrange(-1, 2))
+                agent.move_position(neighbour) 
                 agent.check_bounds()
 
         pygame.display.update()
