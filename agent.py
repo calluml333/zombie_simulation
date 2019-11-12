@@ -1,54 +1,27 @@
 """
-Module that contains the various required classes.
+Module that contains the various required classes for agents in the simulation.
 """
 
-class Environment:
-    """
-    A class that defines the behaviour of the environment that will be used 
-    for the simulation.
-    """
-    def __init__(self, x, y, n_humans, n_zombies):
-        self.x = x
-        self.y = y
-        self.n_humans = n_humans
-        self.n_zombies = n_zombies
-
-    @property
-    def x(self):
-        return self._x
-
-    @x.setter
-    def x(self, value):
-        if type(value) == int or type(value) == float:
-            self._x = value
-        else:
-            raise TypeError("x is required to be either an int or a float")
-
-    @property
-    def y(self):
-        return self._y
-
-    @y.setter
-    def y(self, value):
-        if type(value) == int or type(value) == float:
-            self._y = value
-        else:
-            raise TypeError("y is required to be either an int or a float")
-
+import random 
 
 class Agent:
     """
     A class that defines the behaviour of the agents that are interacting within the
     environment during the simulation.
     """
-    def __init__(self, name, position, speed=0.5):
-        self._name = name
-        self.position = position
-        self.speed = speed
-    
-    _agent_type = 'a'
-    _color = (0, 0, 0)
 
+    agent_type = 'a'
+    color = (0, 0, 0)
+    size = 5
+    
+    def __init__(self, x_boundary, y_boundary, speed=0.5):
+        # self._name = name
+        # self.position = position
+        self.speed = speed
+        self.x_boundary = x_boundary
+        self.y_boundary = y_boundary
+        self.position = (random.randrange(0, self.x_boundary), random.randrange(0, self.y_boundary))
+    
     @property
     def name(self):
         return self._name
@@ -90,29 +63,53 @@ class Agent:
     
     def move_position(self, neighbour_position):
         self._position = tuple([sum(x) for x in zip(self._position, neighbour_position)])
+
+    def check_bounds(self):
+        if self.position[0] < 0: 
+            self.position[0] = 0
+        elif self.position[0] > self.x_boundary: 
+            self.position[0] = self.x_boundary
+        
+        if self.position[1] < 0: 
+            self.position[1] = 0
+        elif self.position[1] > self.y_boundary: 
+            self.position[1] = self.y_boundary
         
 
 class Human(Agent):
     """
     A subclass  of agent, specifying a "Human" agent and it's behaviour.
     """
-    def __init__(self, name, position, speed=0.7):
-        Agent.__init__(self, name, position, speed)
-        self._agent_type = 'h'
-        
-    _color = (0,0,255) 
+
+    color = (0,0,255) 
+
+    def __init__(self, x_boundary, y_boundary, speed=0.7):
+        Agent.__init__(self, x_boundary, y_boundary, speed)
+        self.agent_type = 'h'
+
+    def __add__(self, other_blob):
+        if other_blob.agent_type == self.agent_type:
+            # Same type, do nothing
+            pass    
+        elif other_blob.agent_type == 'z':
+            # Human-Zombie interaction  
+            pass
+        else:
+            # Some other interaction
+            pass
 
 
 class Zombie(Agent):
     """
-    A subclass  of agent, specifying a "Zpmbie" agent and it's behaviour.
+    A subclass  of agent, specifying a "Zombie" agent and it's behaviour.
     """
-    def __init__(self, name, position, speed=0.3, was_human=False):
-        Agent.__init__(self, name, position, speed )
-        self._agent_type = 'z'
-        self.was_human = was_human
+    
+    color = (255,0,0)
 
-    _color = (255,0,0)
+    def __init__(self, x_boundary, y_boundary, speed=0.3, was_human=False):
+        Agent.__init__(self, x_boundary, y_boundary, speed )
+        self.agent_type = 'z'
+        self.was_human = was_human
 
 
 if __name__ == "__main__":
