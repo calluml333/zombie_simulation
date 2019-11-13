@@ -3,7 +3,6 @@ Module that contains the environment class.
 """
 
 import random
-import pygame
 import math
 
 class Environment:
@@ -19,10 +18,6 @@ class Environment:
         self._n_zombies = n_zombies
         self._Human = Human
         self._Zombie = Zombie
-        self.game_display = pygame.display.set_mode((self._width, self._height))
-        self.clock = pygame.time.Clock()   
-    
-    pygame.display.set_caption("Zombie Outbreak Simulation")
 
     @property
     def height(self):
@@ -70,31 +65,6 @@ class Environment:
                             pass
         return humans, zombies
                             
-    def draw_environment(self, agents):
-        self.game_display.fill((255, 255, 255))
-        humans, zombies = self.handle_collisions(agents)
-        for agent_dict in agents:
-            for agent_id in agent_dict:
-                agent = agent_dict[agent_id]
-                pygame.draw.circle(self.game_display, agent.color, (agent.x, agent.y), agent.size)
-                neighbour = (random.randrange(-1, 2), random.randrange(-1, 2))
-                agent.move_position(neighbour) 
-                agent.check_bounds()
-
-        pygame.display.update()
-        return humans, zombies
-
-    def generate(self):
-        humans = dict(enumerate([self._Human(self._width, self._height) for i in range(self._n_humans)]))
-        zombies = dict(enumerate([self._Zombie(self._width, self._height) for i in range(self._n_zombies)]))
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-            humans, zombies = self.draw_environment([humans, zombies])
-            self.clock.tick(60)
-
 
 if __name__ == "__main__":
     pass
