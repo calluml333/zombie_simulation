@@ -19,16 +19,20 @@ pygame.display.set_caption("Zombie Outbreak Simulation")
 def draw_environment(environment, agents):
     game_display.fill((0, 0, 0))
     humans, zombies = environment.handle_collisions(agents)
+    
     for zombie_id in zombies:
         zombie = zombies[zombie_id]
         zombie.hunt_human(humans)
+    
     for agent_dict in agents:
         for agent_id in agent_dict:
             agent = agent_dict[agent_id]
             pygame.draw.circle(game_display, agent.color, (agent.x, agent.y), agent.size)
+            
             if agent.agent_type != 'z':
-                neighbour = (random.randrange(-1, 2), random.randrange(-1, 2))
-                agent.move_position(neighbour) 
+                # TODO: Create logic that will move the human agents
+                pass
+                
             agent.check_bounds()
     pygame.display.update()
     return humans, zombies

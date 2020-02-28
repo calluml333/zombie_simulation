@@ -120,20 +120,17 @@ class Agent:
             distance = self.calc_distance_to_agent(human)
             if distance < smallest_distance:
                 nearest_human = human
+                smallest_distance = distance
         return nearest_human 
 
     def move_towards_agent(self, other_agent):
-        print("Target agent is at [{0}, {1}]".format(other_agent.x, other_agent.y))
         x = (other_agent.x - self.x)
         y = (other_agent.y - self.y)
-
         theta = np.arctan2(other_agent.y - self.y, other_agent.x - self.x)
         dx = round(self._speed * math.cos(theta))
         dy = round(self._speed * math.sin(theta))
-
-        print("Moving agent {0} to: [{1}, {2}]".format((self.agent_type, self.position), self.x + dx, self.y + dy))
         self.move_position((dx, dy))
-        
+
 
 class Human(Agent):
     """
@@ -162,7 +159,7 @@ class Zombie(Agent):
     
     color = (255,0,0)
 
-    def __init__(self, x_boundary, y_boundary, speed=0.01, was_human=False):
+    def __init__(self, x_boundary, y_boundary, speed=0.00001, was_human=False):
         Agent.__init__(self, x_boundary, y_boundary, speed)
         self.agent_type = 'z'
         self.was_human = was_human
