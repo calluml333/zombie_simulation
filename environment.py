@@ -11,13 +11,14 @@ class Environment:
     for the simulation.
     """
 
-    def __init__(self, height, width, Human, Zombie, n_humans, n_zombies):
+    def __init__(self, height, width, Human, Zombie, n_humans, n_zombies, p_bite=0.3):
         self._height = height
         self._width = width
         self._n_humans = n_humans
         self._n_zombies = n_zombies
         self._Human = Human
         self._Zombie = Zombie
+        self._p_bite = p_bite
 
     @property
     def height(self):
@@ -41,7 +42,6 @@ class Environment:
         else:
             raise TypeError("y is required to be either an int or a float")
 
-
     def calc_norm(self, list1, list2):
         diff_list = [a - b for a, b in zip(list1, list2)]
         abs_list = [abs(x) for x in diff_list]
@@ -57,12 +57,11 @@ class Environment:
         for human_id, human in humans.copy().items():
             for other_agents in humans, zombies:
                 for other_agent_id, other_agent in other_agents.copy().items():
-                    if human == other_agent:
-                        pass
-                    else:
+                    if human != other_agent and other_agent.agent_type != 'r':
                         if self.is_touching(human, other_agent):
-                            # We have a collision
-                            pass
+                            sum_agents = human + other_agent
+                            if sum_agents:
+                                pass
         return humans, zombies
                             
 

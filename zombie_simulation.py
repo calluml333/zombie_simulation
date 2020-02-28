@@ -5,10 +5,11 @@ from agent import Agent, Human, Zombie
 from environment import Environment
 
 
-n_humans = 15
+n_humans = 1
 n_zombies = 1
 WIDTH = 500
 HEIGHT = 500
+p_kill = 0.1
 
 game_display = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()   
@@ -16,20 +17,24 @@ pygame.display.set_caption("Zombie Outbreak Simulation")
 
 
 def draw_environment(environment, agents):
-    game_display.fill((255, 255, 255))
+    game_display.fill((0, 0, 0))
     humans, zombies = environment.handle_collisions(agents)
+    for zombie_id in zombies:
+        zombie = zombies[zombie_id]
+        zombie.hunt_human(humans)
     for agent_dict in agents:
         for agent_id in agent_dict:
             agent = agent_dict[agent_id]
             pygame.draw.circle(game_display, agent.color, (agent.x, agent.y), agent.size)
-            neighbour = (random.randrange(-1, 2), random.randrange(-1, 2))
-            agent.move_position(neighbour) 
+            if agent.agent_type != 'z':
+                neighbour = (random.randrange(-1, 2), random.randrange(-1, 2))
+                agent.move_position(neighbour) 
             agent.check_bounds()
     pygame.display.update()
     return humans, zombies
 
 def generate(environment):
-    humans = dict(enumerate([Human(WIDTH, HEIGHT) for i in range(n_humans)]))
+    humans = dict(enumerate([Human(WIDTH, HEIGHT, p_kill) for i in range(n_humans)]))
     zombies = dict(enumerate([Zombie(WIDTH, HEIGHT) for i in range(n_zombies)]))
     while True:
         for event in pygame.event.get():
