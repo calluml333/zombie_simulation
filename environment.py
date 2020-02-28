@@ -11,14 +11,13 @@ class Environment:
     for the simulation.
     """
 
-    def __init__(self, height, width, Human, Zombie, n_humans, n_zombies, p_bite=0.3):
+    def __init__(self, height, width, Human, Zombie, n_humans, n_zombies):
         self._height = height
         self._width = width
         self._n_humans = n_humans
         self._n_zombies = n_zombies
         self._Human = Human
         self._Zombie = Zombie
-        self._p_bite = p_bite
 
     @property
     def height(self):
@@ -41,15 +40,10 @@ class Environment:
             self._width = value
         else:
             raise TypeError("y is required to be either an int or a float")
-
-    def calc_norm(self, list1, list2):
-        diff_list = [a - b for a, b in zip(list1, list2)]
-        abs_list = [abs(x) for x in diff_list]
-        norm = math.sqrt(sum(abs_list))
-        return norm
-    
+   
     def is_touching(self, agent1, agent2):
-        return self.calc_norm((agent1.x, agent1.y), (agent2.x, agent2.y)) < (agent1.size + agent2.size)
+        distance = math.sqrt(sum([(a - b) ** 2 for a, b in zip([agent1.x, agent1.y], [agent2.x, agent2.y])]))
+        return  distance < (agent1.size + agent2.size)
 
     def handle_collisions(self, agents):
         humans, zombies = agents
@@ -57,11 +51,22 @@ class Environment:
         for human_id, human in humans.copy().items():
             for other_agents in humans, zombies:
                 for other_agent_id, other_agent in other_agents.copy().items():
-                    if human != other_agent and other_agent.agent_type != 'r':
+                    if human != other_agent:
+                        
                         if self.is_touching(human, other_agent):
                             sum_agents = human + other_agent
                             if sum_agents:
-                                pass
+                                del zombies[other_agent_id]
+                                break
+                            else:
+                                human_pos = human.position
+                                del humans[human_id]
+                                
+                                new_Zombie = self._Zombie(self._width, self._height, was_human = True)
+                                new_Zombie.position = human_pos
+                                new_z_key = max(zombies.keys()) + 1
+                                zombies.update({new_z_key: new_Zombie})
+                                break
         return humans, zombies
                             
 

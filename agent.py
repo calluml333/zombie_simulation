@@ -16,13 +16,13 @@ class Agent:
     color = (0, 0, 0)
     size = 5
     
-    def __init__(self, x_boundary, y_boundary, p_kill=0, speed=5):
-        self._speed = speed
+    def __init__(self, x_boundary, y_boundary, speed):
         self.x_boundary = x_boundary
         self.y_boundary = y_boundary
-        self.p_kill = p_kill
         self.x = random.randrange(0, self.x_boundary)
         self.y = random.randrange(0, self.y_boundary)
+        self._speed = speed
+        # self._p_kill = p_kill
 
     def __add__(self, other):
         rand_threshold = random.random()
@@ -30,13 +30,12 @@ class Agent:
             # Same type, do nothing (for now)
             pass    
         elif self.agent_type == 'h' and other.agent_type == 'z':
-            if rand_threshold >= self.p_kill:
-                other.blank_out_agent()
-                return None
+            if rand_threshold <= self.p_kill:
+                print('Zombie has been killed by Human')
+                return 1
             else:
-                return self.x, self.y
-        elif other.agent == 'r':
-            pass
+                print('Human has been bitten and is now a Zombie')
+                return 0
 
     @property
     def speed(self):
@@ -114,60 +113,32 @@ class Agent:
         return np.sqrt(sum([(a - b) ** 2 for a, b in zip(self_coords, agent_cords)]))
               
     def find_nearest_human(self, human_dict):
+        nearest_human = False
         smallest_distance = 1e30
+
         for human_id in human_dict:
             human = human_dict[human_id]
             distance = self.calc_distance_to_agent(human)
             if distance < smallest_distance:
                 nearest_human = human
                 smallest_distance = distance
-        return nearest_human 
+        
+        return nearest_human
 
     def move_towards_agent(self, other_agent):
         x = (other_agent.x - self.x)
         y = (other_agent.y - self.y)
         theta = np.arctan2(other_agent.y - self.y, other_agent.x - self.x)
+
         dx = round(self._speed * math.cos(theta))
         dy = round(self._speed * math.sin(theta))
         self.move_position((dx, dy))
 
+    # def kill_human(self, human):
+    #     del human
 
-class Human(Agent):
-    """
-    A subclass  of agent, specifying a "Human" agent and it's behaviour.
-    """
-
-    color = (150,150,255) 
-
-    def __init__(self, x_boundary, y_boundary, p_kill=0.7, speed=7):
-        Agent.__init__(self, x_boundary, y_boundary, speed)
-        self.agent_type = 'h'
-
-    @property
-    def p_kill(self):
-        return self._p_kill
-
-    @p_kill.setter
-    def p_kill(self, value):
-        self._p_kill = value
-
-
-class Zombie(Agent):
-    """
-    A subclass  of agent, specifying a "Zombie" agent and it's behaviour.
-    """
-    
-    color = (255,0,0)
-
-    def __init__(self, x_boundary, y_boundary, speed=0.00001, was_human=False):
-        Agent.__init__(self, x_boundary, y_boundary, speed)
-        self.agent_type = 'z'
-        self.was_human = was_human
-
-    def hunt_human(self, human_dict):
-        nearest_human = self.find_nearest_human(human_dict)
-        self.move_towards_agent(nearest_human)
-
+    # def kill_zombie(self, zombie):
+    #     del zombie
 
 if __name__ == "__main__":
     pass
