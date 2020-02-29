@@ -5,15 +5,15 @@ from models import Agent, Zombie, Human
 from environment import Environment as Env
 
 
-n_humans = 1
-n_zombies = 1
+n_humans = 3
+n_zombies = 12
 WIDTH = 500
 HEIGHT = 500
 p_kill = 0.4
 
 game_display = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()   
-pygame.display.set_caption("Zombie Outbreak Simulation")
+pygame.display.set_caption("Zombie Outbreak Game")
 
 
 def draw_environment(environment, agents):

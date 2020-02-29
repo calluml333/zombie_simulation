@@ -5,6 +5,7 @@ Module that contains the environment class.
 import random
 import math
 import pygame
+import sys
 
 class Environment:
     """
@@ -56,35 +57,44 @@ class Environment:
                         
                         if self.is_touching(human, other_agent):
                             sum_agents = human + other_agent
-                            if sum_agents:
-                                if other_agent_id in list(zombies):
-                                    del zombies[other_agent_id]
+                            if sum_agents == '0':
+                                self.human_killed_zombie(zombies, other_agent_id)
                                 break
-                            else:
-                                human_pos = human.position
-                                if human_id in list(humans):
-                                    del humans[human_id]
-                                
-                                new_Zombie = self._Zombie(self._width, self._height, was_human = True)
-                                new_Zombie.position = human_pos
-                                new_z_key = max(zombies.keys()) + 1
-                                zombies.update({new_z_key: new_Zombie})
+                            elif sum_agents == '1':
+                                self.human_to_zombie(humans, zombies, human_id)
                                 break
         return humans, zombies
+
+    def human_to_zombie(self, humans_dict, zombies_dict, human_id):
+        if human_id in list(humans_dict):
+            human = humans_dict[human_id]
+            human_pos = human.position
+            del humans_dict[human_id]
+        
+        new_Zombie = self._Zombie(self._width, self._height, was_human = True)
+        new_Zombie.position = human_pos
+        new_z_key = max(zombies_dict.keys()) + 1
+        zombies_dict.update({new_z_key: new_Zombie})
+
+    def human_killed_zombie(self, zombies_dict, zombie_id):
+        if zombie_id in list(zombies_dict):
+            del zombies_dict[zombie_id]   
 
     @staticmethod
     def check_empty_populations(*args):
         for population in args:
             if len(population) == 0:
                 pygame.quit()
-                quit()
+                print('------- Game over -------')
+                sys.exit(0)
 
     @staticmethod
     def check_for_exit():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                print('\n ------- Game over -------')
+                sys.exit(0)
 
 
 if __name__ == "__main__":

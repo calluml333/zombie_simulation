@@ -32,10 +32,10 @@ class Agent:
         elif self.agent_type == 'h' and other.agent_type == 'z':
             if rand_threshold <= self.p_kill:
                 print('Zombie has been killed by Human')
-                return 1
+                return '0'
             else:
                 print('Human has been bitten and is now a Zombie')
-                return 0
+                return '1'
 
     @property
     def speed(self):
