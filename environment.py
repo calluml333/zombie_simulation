@@ -4,6 +4,7 @@ Module that contains the environment class.
 
 import random
 import math
+import pygame
 
 class Environment:
     """
@@ -70,7 +71,21 @@ class Environment:
                                 zombies.update({new_z_key: new_Zombie})
                                 break
         return humans, zombies
-                            
+
+    @staticmethod
+    def check_empty_populations(*args):
+        for population in args:
+            if len(population) == 0:
+                pygame.quit()
+                quit()
+
+    @staticmethod
+    def check_for_exit():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
 
 if __name__ == "__main__":
     pass
