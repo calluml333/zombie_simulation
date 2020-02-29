@@ -56,11 +56,13 @@ class Environment:
                         if self.is_touching(human, other_agent):
                             sum_agents = human + other_agent
                             if sum_agents:
-                                del zombies[other_agent_id]
+                                if other_agent_id in list(zombies):
+                                    del zombies[other_agent_id]
                                 break
                             else:
                                 human_pos = human.position
-                                del humans[human_id]
+                                if human_id in list(humans):
+                                    del humans[human_id]
                                 
                                 new_Zombie = self._Zombie(self._width, self._height, was_human = True)
                                 new_Zombie.position = human_pos

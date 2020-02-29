@@ -7,11 +7,11 @@ from zombie import Zombie
 from environment import Environment
 
 
-n_humans = 3
-n_zombies = 2
+n_humans = 30
+n_zombies = 12
 WIDTH = 500
 HEIGHT = 500
-p_kill = 0.3
+p_kill = 0.55
 
 game_display = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()   
