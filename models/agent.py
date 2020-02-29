@@ -73,12 +73,6 @@ class Agent:
         elif self.y > self.y_boundary: 
             self.y = self.y_boundary
 
-    def blank_out_agent(self):
-        self.agent_type == 'r'
-        self.color == (255,255,255)
-        self.speed == 0
-        print('Agent has died')
-
     def move_north(self):
         self.y += self._speed * -1
 
@@ -90,22 +84,6 @@ class Agent:
 
     def move_west(self):
         self.x += self._speed * -1
-
-    def move_north_east(self):
-        self.move_north()
-        self.move_east()
-        
-    def move_south_east(self):
-        self.move_south()
-        self.move_east()
-
-    def move_north_west(self):
-        self.move_north()
-        self.move_west()
-
-    def move_south_west(self):
-        self.move_south()
-        self.move_east()
 
     def calc_distance_to_agent(self, agent):
         self_coords = (self.x, self.y)
@@ -134,11 +112,6 @@ class Agent:
         dy = round(self._speed * math.sin(theta))
         self.move_position((dx, dy))
 
-    # def kill_human(self, human):
-    #     del human
-
-    # def kill_zombie(self, zombie):
-    #     del zombie
 
 if __name__ == "__main__":
     pass
