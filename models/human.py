@@ -7,12 +7,13 @@ class Human(Agent):
     """
 
     color = (150,150,255) 
+    _player = False
 
     def __init__(self, x_boundary, y_boundary, p_kill, speed=7):
         Agent.__init__(self, x_boundary, y_boundary, speed)
         self.agent_type = 'h'
         self.p_kill = p_kill
-
+        
     # @property
     # def p_kill(self):
     #     return self._p_kill
@@ -20,3 +21,11 @@ class Human(Agent):
     # @p_kill.setter
     # def p_kill(self, value):
     #     self._p_kill = value
+
+    @property
+    def is_player(self):
+        return self._player
+
+    @is_player.setter
+    def is_player(self, value):
+        self._player = value

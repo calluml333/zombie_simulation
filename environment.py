@@ -96,6 +96,23 @@ class Environment:
                 print('\n ------- Game over -------')
                 sys.exit(0)
 
+    @staticmethod
+    def move_human(agent):
+        keys_pressed = pygame.key.get_pressed()
+
+        if keys_pressed[pygame.K_LEFT]:
+            agent.move_west()
+
+        if keys_pressed[pygame.K_RIGHT]:
+            agent.move_east()
+
+        if keys_pressed[pygame.K_UP]:
+            agent.move_north()
+
+        if keys_pressed[pygame.K_DOWN]:
+            agent.move_south()
+
+        pygame.display.update()
 
 if __name__ == "__main__":
     pass
