@@ -14,19 +14,15 @@ class Agent(Element, IAgent):
     color = (0, 0, 0)
     is_type = 'Agent'
     size = 7
+    speed = 5
     _sight = 200
     
-    def __init__(self, x_boundary, y_boundary, speed):
+    def __init__(self, x_boundary, y_boundary):
         Element.__init__(self, x_boundary, y_boundary)
-        self._speed = speed
         
-    @property
-    def speed(self):
-        return self._speed
-
-    def change_speed(self, value):
+    def increment_speed(self, value):
         if 0 < self.speed + value < 10:
-            self._speed += value
+            self.speed += value
         elif value <= 0 or value > 10:
             raise ValueError("Speed must be an int from the range (0, 10]")
         elif type(value) != int:
@@ -53,16 +49,16 @@ class Agent(Element, IAgent):
         self.y += neighbour_position[1]
 
     def move_north(self):
-        self.y += self._speed * -1
+        self.y += self.speed * -1
 
     def move_east(self):
-        self.x += self._speed * 1
+        self.x += self.speed * 1
 
     def move_south(self):
-        self.y += self._speed * 1
+        self.y += self.speed * 1
 
     def move_west(self):
-        self.x += self._speed * -1
+        self.x += self.speed * -1
 
     def calc_distance_to_agent(self, agent):
         self_coords = (self.x, self.y)
@@ -88,8 +84,8 @@ class Agent(Element, IAgent):
         y = (other_agent.y - self.y)
         theta = np.arctan2(other_agent.y - self.y, other_agent.x - self.x)
 
-        dx = round(self._speed * math.cos(theta))
-        dy = round(self._speed * math.sin(theta))
+        dx = round(self.speed * math.cos(theta))
+        dy = round(self.speed * math.sin(theta))
         self.move_position((dx, dy))
 
 

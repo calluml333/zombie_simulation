@@ -3,6 +3,10 @@ from ..Interfaces.IElement import IElement
 
 
 class Element(IElement):
+    """
+    This class defines the basic attributes of the objects in the game
+    """
+
     color = (255,255,255)
     size = 1
     x = None
@@ -26,18 +30,14 @@ class Element(IElement):
         
         elif self.is_type == 'Human' and other.is_type == 'Zombie':
             if rand_threshold <= self.p_kill:
-                print('Zombie has been killed by Human')
                 return '0'
             else:
-                print('Human has been bitten and is now a Zombie')
                 return '1'
         
         elif self. is_type == 'Human' and other.is_type == 'Weapon':
             if not other.picked_up:
-                print('Human has picked up a', other.weapon_type)
                 return '2'
 
-                
     def check_bounds(self):
         if self.x < 0: 
             self.x = 0

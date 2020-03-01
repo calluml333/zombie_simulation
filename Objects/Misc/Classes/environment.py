@@ -1,7 +1,3 @@
-"""
-Module that contains the environment class.
-"""
-
 import random
 import math
 import pygame
@@ -13,11 +9,16 @@ class Environment:
     for the simulation.
     """
 
+    clock = clock = pygame.time.Clock()
+    tick_time = 30
+
     def __init__(self, height, width, Human, Zombie, Bat):
         self._height = height
         self._width = width
         self._Human = Human
-        self._Zombie = Zombie
+        self._Zombie = Zombie    
+        self.game_display = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption("Zombie Outbreak Game")
 
     @property
     def height(self):
@@ -41,6 +42,36 @@ class Environment:
         else:
             raise TypeError("y is required to be either an int or a float")
    
+    def draw_environment(self, population):
+        self.game_display.fill((0, 0, 0))
+        population = self.handle_collisions(population)
+        
+        for member_id in population:
+            member = population[member_id]
+
+            pygame.draw.circle(self.game_display, member.color, (member.x, member.y), member.size)
+            
+            if member.is_type == 'Human' and member.is_player:
+                self.move_human(member)
+            
+            elif member.is_type == 'Zombie':
+                member.hunt_human(population)
+                self.random_move_agent(member)
+
+            elif member.is_type == 'Weapon' and member.picked_up:
+                member.track_agent(member.owner)
+
+            member.check_bounds()
+        pygame.display.update()
+        return population
+
+    def generate(self, population):
+        while True:
+            self.check_for_exit()
+            population = self.draw_environment(population)
+            self.check_empty_populations(population)
+            self.clock.tick(self.tick_time)
+  
     def is_touching(self, agent1, agent2):
         distance = math.sqrt(sum([(a - b) ** 2 for a, b in zip([agent1.x, agent1.y], [agent2.x, agent2.y])]))
         return  distance < (agent1.size + agent2.size)
@@ -54,19 +85,23 @@ class Environment:
                         if self.is_touching(member, other_member):
                             sum_members = member + other_member
                             if sum_members == '0':
-                                self.human_killed_zombie(population, other_member_id)
+                                self.human_kill_zombie(population, other_member_id)
+                                print('Zombie has been killed by Human')
                                 break
                             elif sum_members == '1':
                                 self.human_to_zombie(population, member_id)
+                                print('Human has been bitten and is now a Zombie')
                                 break
                             elif sum_members == '2':
-                                self.human_get_weapon(population, member_id, other_member_id)
+                                population[member_id].pick_up_weapon(population[other_member_id])
+                                print('Human has picked up a', other_member.weapon_name)
         return population
            
     def human_to_zombie(self, population, human_id):
         if human_id in list(population):
             human = population[human_id]
             human_pos = human.position
+            human.drop_all_weapons()
             del population[human_id]
         
         new_Zombie = self._Zombie(self._width, self._height, was_human = True)
@@ -74,15 +109,9 @@ class Environment:
         new_z_key = max(population.keys()) + 1
         population.update({new_z_key: new_Zombie})
 
-    def human_killed_zombie(self, population, zombie_id):
+    def human_kill_zombie(self, population, zombie_id):
         if zombie_id in list(population):
             del population[zombie_id]
-
-    def human_get_weapon(self, population, human_id, weapon_id):
-        population[human_id].pick_up_weapon(population[weapon_id])
-        population[weapon_id].picked_up = True
-        population[weapon_id].owner_id = human_id
-
 
     @staticmethod
     def check_empty_populations(population):
@@ -118,7 +147,6 @@ class Environment:
             agent.move_north()
         if keys_pressed[pygame.K_DOWN]:
             agent.move_south()
-
         pygame.display.update()
 
     @staticmethod

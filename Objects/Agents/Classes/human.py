@@ -8,21 +8,14 @@ class Human(Agent):
 
     color = (150,150,255) 
     is_type = 'Human'
-    _player = False
+    p_kill = 0.5
+    is_player = False
+    speed = 7
     _has_weapon = False
     _weapons = {}
 
-    def __init__(self, x_boundary, y_boundary, p_kill, speed=7):
-        Agent.__init__(self, x_boundary, y_boundary, speed)
-        self.p_kill = p_kill
-        
-    @property
-    def is_player(self):
-        return self._player
-
-    @is_player.setter
-    def is_player(self, value):
-        self._player = value
+    def __init__(self, x_boundary, y_boundary):
+        Agent.__init__(self, x_boundary, y_boundary)
 
     @property
     def weapons(self):
@@ -34,15 +27,28 @@ class Human(Agent):
             self.p_kill = new_p_kill
             
     def pick_up_weapon(self, weapon):
-        self.update_p_kill(weapon.damage)
-        self.change_speed(weapon.speed_decrease)
-        self._has_weapon = True
+        if weapon.weapon_name not in list(self.weapons):
+            self.update_p_kill(weapon.damage)
+            self.increment_speed(-weapon.speed_decrease)
+            self._has_weapon = True
+            self.weapons[weapon.weapon_name] = weapon
+            weapon.picked_up = True
+            weapon.owner = self
 
-    def drop_weapon(self, weapon):	
-        self.update_p_kill(-weapon.damage)
-        self.change_speed(-weapon.speed_decrease)
-        del weapons[weapon.__class__.__name__]
-        self._has_weapon = False
+    def drop_weapon(self, weapon):
+        if weapon.weapon_name in list(self.weapons):	
+            self.update_p_kill(-weapon.damage)
+            self.increment_speed(weapon.speed_decrease)
+            weapon.picked_up = False
+            weapon.owner = None
+            del self.weapons[weapon.weapon_name]
+        if not self.weapons:
+            self._has_weapon = False
+
+    def drop_all_weapons(self):
+        weapon_ids = list(self.weapons.keys())
+        for weapon_id in weapon_ids:
+            self.drop_weapon(self.weapons[weapon_id])
 
     def move_position(self, neighbour_position):
         self.x += neighbour_position[0]

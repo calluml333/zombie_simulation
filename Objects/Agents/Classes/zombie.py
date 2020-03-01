@@ -8,10 +8,11 @@ class Zombie(Agent):
     
     color = (255,0,0)
     is_type = 'Zombie'
+    speed = 1
     _sight = 100
 
-    def __init__(self, x_boundary, y_boundary, speed=1, was_human=False):
-        Agent.__init__(self, x_boundary, y_boundary, speed)
+    def __init__(self, x_boundary, y_boundary, was_human=False):
+        Agent.__init__(self, x_boundary, y_boundary)
         self.was_human = was_human
 
     def hunt_human(self, population):
