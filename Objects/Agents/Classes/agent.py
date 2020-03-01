@@ -12,7 +12,8 @@ class Agent(Element, IAgent):
     """
 
     color = (0, 0, 0)
-    size = 5
+    is_type = 'Agent'
+    size = 7
     _sight = 200
     
     def __init__(self, x_boundary, y_boundary, speed):
@@ -51,17 +52,6 @@ class Agent(Element, IAgent):
         self.x += neighbour_position[0]
         self.y += neighbour_position[1]
 
-    def check_bounds(self):
-        if self.x < 0: 
-            self.x = 0
-        elif self.x > self.x_boundary: 
-            self.x = self.x_boundary
-        
-        if self.y < 0: 
-            self.y = 0
-        elif self.y > self.y_boundary: 
-            self.y = self.y_boundary
-
     def move_north(self):
         self.y += self._speed * -1
 
@@ -79,16 +69,17 @@ class Agent(Element, IAgent):
         agent_cords = (agent.x, agent.y)
         return np.sqrt(sum([(a - b) ** 2 for a, b in zip(self_coords, agent_cords)]))
               
-    def find_nearest_human(self, human_dict):
+    def find_nearest_human(self, population):
         nearest_human = False
         smallest_distance = 1e30
 
-        for human_id in human_dict:
-            human = human_dict[human_id]
-            distance = self.calc_distance_to_agent(human)
-            if distance < smallest_distance:
-                nearest_human = human
-                smallest_distance = distance
+        for member_id in population:
+            member = population[member_id]
+            if member.is_type == 'Human':
+                distance = self.calc_distance_to_agent(member)
+                if distance < smallest_distance:
+                    nearest_human = member
+                    smallest_distance = distance
         
         return nearest_human, smallest_distance
 

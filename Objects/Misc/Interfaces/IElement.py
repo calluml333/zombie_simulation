@@ -20,3 +20,8 @@ class IElement(abc.ABC):
     @abc.abstractmethod
     def y(self):
         pass
+
+    @property
+    @abc.abstractmethod
+    def is_type(self):
+        pass

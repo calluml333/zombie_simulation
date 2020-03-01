@@ -7,6 +7,7 @@ class Human(Agent):
     """
 
     color = (150,150,255) 
+    is_type = 'Human'
     _player = False
     _has_weapon = False
     _weapons = {}
@@ -33,14 +34,13 @@ class Human(Agent):
             self.p_kill = new_p_kill
             
     def pick_up_weapon(self, weapon):
-        weapons[weapon.__class__.__name__] = weapon
-        update_p_kill(weapon.damage)
-        change_speed(weapon.speed_decrease)
+        self.update_p_kill(weapon.damage)
+        self.change_speed(weapon.speed_decrease)
         self._has_weapon = True
 
     def drop_weapon(self, weapon):	
-        update_p_kill(-weapon.damage)
-        change_speed(-weapon.speed_decrease)
+        self.update_p_kill(-weapon.damage)
+        self.change_speed(-weapon.speed_decrease)
         del weapons[weapon.__class__.__name__]
         self._has_weapon = False
 
@@ -50,5 +50,6 @@ class Human(Agent):
         if self._has_weapon:
             for weapon_id in _weapons:
                 _weapons[weapon_id].track_agent(self.position)
+                
 
     

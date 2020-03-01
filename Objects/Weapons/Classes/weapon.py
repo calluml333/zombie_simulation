@@ -8,17 +8,19 @@ class Weapon(IWeapon, Element):
     """
 
     color = (0,255,0)
+    is_type = 'Weapon'
     size = 0
     picked_up = False
-    _damage = 0
-    _speed_decrease = 0
+    damage = 0
+    speed_decrease = 0
 
     def __init__(self, x_boundary, y_boundary):
         Element.__init__(self, x_boundary, y_boundary)
         self.x_boundary = x_boundary
         self.y_boundary = y_boundary
    
-    def track_agent(self, agent_position):
-        self.y = agent_position[1]
-        self.x = agent_position[0] - self.size
+    def track_agent(self, agent):
+
+        self.y = agent.position[1]
+        self.x = agent.position[0] - agent.size - self.size
 

@@ -4,12 +4,12 @@ import abc
 class IWeapon(abc.ABC):
     @property
     @abc.abstractmethod
-    def _damage(self):
+    def damage(self):
         pass
 
     @property
     @abc.abstractmethod
-    def _speed_decrease(self):
+    def speed_decrease(self):
         pass
 
     
