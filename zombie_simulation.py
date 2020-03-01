@@ -1,12 +1,14 @@
 import math 
 import pygame
 import random
-from models import Agent, Zombie, Human
+from Objects import Human, Zombie, Bat
 from environment import Environment as Env
 
 
-n_humans = 10
+n_humans = 1
 n_zombies = 15
+n_bats = 1
+
 WIDTH = 500
 HEIGHT = 500
 p_kill = 0.7
@@ -29,10 +31,11 @@ def draw_environment(environment, agents):
             agent = agent_dict[agent_id]
             pygame.draw.circle(game_display, agent.color, (agent.x, agent.y), agent.size)
             
-            if agent.agent_type == 'h' and agent.is_player:
+            if type(agent) == Human and agent.is_player:
                 Env.move_human(agent)
-                pass
-                
+            elif type(agent) == Zombie:
+                Env.random_move_agent(agent)
+
             agent.check_bounds()
     pygame.display.update()
     return humans, zombies
@@ -54,8 +57,16 @@ def create_humans():
 def create_zombies():
     return dict(enumerate([Zombie(WIDTH, HEIGHT) for i in range(n_zombies)]))
 
+def create_bats():
+    return dict(enumerate([Bat(WIDTH, HEIGHT) for i in range(n_zombies)]))
+
+def create_population():
+    key_count = 0
+    humans = dict(enumerate([Human(WIDTH, HEIGHT, p_kill) for i in range(key_count, n_humans)]))
+    # TODO: Finish writing the population creation logic
+
 def main():
-    env = Env(HEIGHT, WIDTH, Human, Zombie, n_humans, n_zombies)
+    env = Env(HEIGHT, WIDTH, Human, Zombie, Bat)
     generate(env)
 
 
