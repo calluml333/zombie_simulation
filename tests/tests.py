@@ -47,14 +47,14 @@ class Tests(unittest.TestCase):
         h = Human(10, 10)
         self.assertEqual(h._speed, 7)
         self.assertEqual(h.color, (0,0,255))
-        self.assertEqual(h.agent_type, 'h')
+        self.assertEqual(type(h), Human)
 
 
     def test_zombie(self):
         z = Zombie(10, 10)
         self.assertEqual(z._speed, 3)
         self.assertEqual(z.color, (255,0,0))
-        self.assertEqual(z.agent_type, 'z')
+        self.assertEqual(type(z), Zombie)
 
 
     def test_zombie_was_human_true(self):

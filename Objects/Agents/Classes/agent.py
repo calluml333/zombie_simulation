@@ -1,54 +1,35 @@
-"""
-Module that contains the various required classes for agents in the simulation.
-"""
-
 import random 
 import math
 import numpy as np
+from ...Misc import Element
+from ..Interfaces.IAgent import IAgent
 
-class Agent:
+
+class Agent(Element, IAgent):
     """
     A class that defines the behaviour of the agents that are interacting within the
     environment during the simulation.
     """
 
-    agent_type = 'a'
     color = (0, 0, 0)
     size = 5
+    _sight = 200
     
     def __init__(self, x_boundary, y_boundary, speed):
-        self.x_boundary = x_boundary
-        self.y_boundary = y_boundary
-        self.x = random.randrange(0, self.x_boundary)
-        self.y = random.randrange(0, self.y_boundary)
+        Element.__init__(self, x_boundary, y_boundary)
         self._speed = speed
-        # self._p_kill = p_kill
-
-    def __add__(self, other):
-        rand_threshold = random.random()
-        if other.agent_type == self.agent_type:
-            # Same type, do nothing (for now)
-            pass    
-        elif self.agent_type == 'h' and other.agent_type == 'z':
-            if rand_threshold <= self.p_kill:
-                print('Zombie has been killed by Human')
-                return 1
-            else:
-                print('Human has been bitten and is now a Zombie')
-                return 0
-
+        
     @property
     def speed(self):
         return self._speed
 
-    @speed.setter
-    def speed(self, value):
-        if 0.0 < value:
-            self._speed = value
-        elif value <= 0.0:
-            raise ValueError("Speed must be (0,)")
+    def change_speed(self, value):
+        if 0 < self.speed + value < 10:
+            self._speed += value
+        elif value <= 0 or value > 10:
+            raise ValueError("Speed must be an int from the range (0, 10]")
         elif type(value) != int:
-            raise TypeError("Speed must be either an integer or a float")  
+            raise TypeError("Speed must be an int from the range (0, 10]")
 
     @property
     def position(self):
@@ -57,6 +38,14 @@ class Agent:
     @position.setter
     def position(self, new_position):
         self.x, self.y = new_position
+
+    @property
+    def sight(self):
+        return self._sight
+
+    @sight.setter
+    def sight(self, value):
+        self._sight = value
     
     def move_position(self, neighbour_position):
         self.x += neighbour_position[0]
@@ -73,12 +62,6 @@ class Agent:
         elif self.y > self.y_boundary: 
             self.y = self.y_boundary
 
-    def blank_out_agent(self):
-        self.agent_type == 'r'
-        self.color == (255,255,255)
-        self.speed == 0
-        print('Agent has died')
-
     def move_north(self):
         self.y += self._speed * -1
 
@@ -90,22 +73,6 @@ class Agent:
 
     def move_west(self):
         self.x += self._speed * -1
-
-    def move_north_east(self):
-        self.move_north()
-        self.move_east()
-        
-    def move_south_east(self):
-        self.move_south()
-        self.move_east()
-
-    def move_north_west(self):
-        self.move_north()
-        self.move_west()
-
-    def move_south_west(self):
-        self.move_south()
-        self.move_east()
 
     def calc_distance_to_agent(self, agent):
         self_coords = (self.x, self.y)
@@ -123,7 +90,7 @@ class Agent:
                 nearest_human = human
                 smallest_distance = distance
         
-        return nearest_human
+        return nearest_human, smallest_distance
 
     def move_towards_agent(self, other_agent):
         x = (other_agent.x - self.x)
@@ -134,11 +101,6 @@ class Agent:
         dy = round(self._speed * math.sin(theta))
         self.move_position((dx, dy))
 
-    # def kill_human(self, human):
-    #     del human
-
-    # def kill_zombie(self, zombie):
-    #     del zombie
 
 if __name__ == "__main__":
     pass
