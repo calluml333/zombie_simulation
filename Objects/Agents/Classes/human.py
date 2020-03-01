@@ -34,6 +34,7 @@ class Human(Agent):
             self.weapons[weapon.weapon_name] = weapon
             weapon.picked_up = True
             weapon.owner = self
+            print('Human has picked up a', weapon.weapon_name)
 
     def drop_weapon(self, weapon):
         if weapon.weapon_name in list(self.weapons):	

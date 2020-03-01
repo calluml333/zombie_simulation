@@ -86,15 +86,13 @@ class Environment:
                             sum_members = member + other_member
                             if sum_members == '0':
                                 self.human_kill_zombie(population, other_member_id)
-                                print('Zombie has been killed by Human')
                                 break
                             elif sum_members == '1':
                                 self.human_to_zombie(population, member_id)
-                                print('Human has been bitten and is now a Zombie')
                                 break
                             elif sum_members == '2':
                                 population[member_id].pick_up_weapon(population[other_member_id])
-                                print('Human has picked up a', other_member.weapon_name)
+                                
         return population
            
     def human_to_zombie(self, population, human_id):
@@ -108,10 +106,12 @@ class Environment:
         new_Zombie.position = human_pos
         new_z_key = max(population.keys()) + 1
         population.update({new_z_key: new_Zombie})
+        print('Human has been bitten and is now a Zombie')
 
     def human_kill_zombie(self, population, zombie_id):
         if zombie_id in list(population):
             del population[zombie_id]
+            print('Zombie has been killed by Human')
 
     @staticmethod
     def check_empty_populations(population):
