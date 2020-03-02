@@ -1,13 +1,13 @@
 from .weapon import Weapon
 
 
-class Bat(Weapon):
+class Sword(Weapon):
 
-    color = (180,150,70)
+    color = (225,225,225)
     is_type = 'Weapon'
-    weapon_name = 'Bat'
+    weapon_name = 'Sword'
     size = 3
-    damage = 0.1
+    damage = 0.3
     speed_decrease = 1
     owner = None
     
@@ -16,6 +16,4 @@ class Bat(Weapon):
 
     def track_agent(self, agent):
         self.y = agent.position[1]
-        self.x = agent.position[0] - (agent.size + self.size)
-
-
+        self.x = agent.position[0] + (agent.size + self.size)

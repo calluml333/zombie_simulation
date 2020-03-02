@@ -22,5 +22,5 @@ class Weapon(IWeapon, Element):
     def track_agent(self, agent):
 
         self.y = agent.position[1]
-        self.x = agent.position[0] - agent.size - self.size
+        self.x = agent.position[0]
 
