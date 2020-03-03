@@ -9,10 +9,11 @@ class Weapon(IWeapon, Element):
 
     color = (0,255,0)
     is_type = 'Weapon'
-    size = 0
     picked_up = False
     damage = 0
+    size = 3
     speed_decrease = 0
+    Selected = False
 
     def __init__(self, x_boundary, y_boundary):
         Element.__init__(self, x_boundary, y_boundary)

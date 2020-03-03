@@ -12,4 +12,7 @@ class IWeapon(abc.ABC):
     def speed_decrease(self):
         pass
 
-    
+    @property
+    @abc.abstractmethod
+    def selected(self):
+        pass  

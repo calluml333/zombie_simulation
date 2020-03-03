@@ -59,7 +59,9 @@ class Environment:
                 self.random_move_agent(member)
 
             elif member.is_type == 'Weapon' and member.picked_up:
-                member.track_agent(member.owner)
+                member.track_agent()
+                if 'gun' in member.weapon_name.lower():
+                    self.fire_gun(member)
 
             member.check_bounds()
         pygame.display.update()
@@ -161,6 +163,24 @@ class Environment:
         elif choice == 3:
             agent.move_west()
             
+    def fire_gun(self, gun):
+        if not gun.target:
+            gun.target = pygame.math.Vector2(gun.owner.x, gun.owner.y + gun.fire_range)
+        else:
+            pygame.draw.line(self.game_display, pygame.Color("red"), (gun.owner.x, gun.owner.y), gun.target, 2)
+
+        keys_pressed = pygame.key.get_pressed()
+        if keys_pressed[pygame.K_SPACE]:
+            gun.fire()   
+        if keys_pressed[pygame.K_a]:
+            target = gun.aim(1)
+        elif keys_pressed[pygame.K_d]:
+            target = gun.aim(-1)
+        else:
+            pass
+        pygame.draw.line(self.game_display, pygame.Color("red"), (gun.owner.x, gun.owner.y), gun.target, 2)
+        pygame.display.update()
+
 
 if __name__ == "__main__":
     pass

@@ -8,7 +8,7 @@ class Human(Agent):
 
     color = (150,150,255) 
     is_type = 'Human'
-    p_kill = 0.5
+    p_kill = 0.4
     is_player = False
     speed = 7
     _has_weapon = False

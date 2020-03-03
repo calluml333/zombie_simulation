@@ -1,1 +1,1 @@
-from .Classes import Weapon, Bat, Sword
+from .Classes import Weapon, Bat, Sword, HandGun

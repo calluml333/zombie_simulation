@@ -1,4 +1,4 @@
-from Objects import Human, Zombie, Bat, Sword
+from Objects import Human, Zombie, Bat, Sword, HandGun
 from Objects import Environment
 
 
@@ -6,9 +6,10 @@ WIDTH = 500
 HEIGHT = 500
 pop_dict = {
     'Human': 1,
-    'Zombie': 5,
+    'Zombie': 1,
     'Bat': 2,
-    'Sword': 2
+    'Sword': 2,
+    'HandGun': 1
 }
 
 def create_population(population_numbers, *args):
@@ -30,7 +31,7 @@ def create_population(population_numbers, *args):
 
 def main():
     env = Environment(HEIGHT, WIDTH, Human, Zombie, Bat)
-    population = create_population(pop_dict, Human, Zombie, Bat, Sword)
+    population = create_population(pop_dict, Human, Zombie, HandGun)
     env.generate(population)
 
 
