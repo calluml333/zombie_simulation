@@ -164,11 +164,6 @@ class Environment:
             agent.move_west()
             
     def fire_gun(self, gun):
-        if not gun.target:
-            gun.target = pygame.math.Vector2(gun.owner.x, gun.owner.y + gun.fire_range)
-        else:
-            pygame.draw.line(self.game_display, pygame.Color("red"), (gun.owner.x, gun.owner.y), gun.target, 2)
-
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_SPACE]:
             gun.fire()   
@@ -178,7 +173,7 @@ class Environment:
             target = gun.aim(-1)
         else:
             pass
-        pygame.draw.line(self.game_display, pygame.Color("red"), (gun.owner.x, gun.owner.y), gun.target, 2)
+        pygame.draw.line(self.game_display, pygame.Color("red"), gun.owner_vector, gun.target, 2)
         pygame.display.update()
 
 

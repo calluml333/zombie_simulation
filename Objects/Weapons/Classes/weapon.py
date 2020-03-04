@@ -14,14 +14,15 @@ class Weapon(IWeapon, Element):
     size = 3
     speed_decrease = 0
     Selected = False
+    owner = None
 
     def __init__(self, x_boundary, y_boundary):
         Element.__init__(self, x_boundary, y_boundary)
         self.x_boundary = x_boundary
         self.y_boundary = y_boundary
    
-    def track_agent(self, agent):
+    def track_agent(self):
 
-        self.y = agent.position[1]
-        self.x = agent.position[0]
+        self.y = self.owner.position[1]
+        self.x = self.owner.position[0]
 
