@@ -26,7 +26,7 @@ def create_population(population_numbers, *args):
             if population_class.__name__ == 'Human':
                 if i == 0:
                     population[key_count].is_player = True
-            key_count += 1            
+            key_count += 1             
     return population
 
 def main():

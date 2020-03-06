@@ -48,3 +48,26 @@ class Element(IElement):
             self.y = 0
         elif self.y > self.y_boundary: 
             self.y = self.y_boundary
+
+    @staticmethod
+    def are_points_collinear(a, b, c, tolerance=0):
+        """
+        to check if points a, b, and c are collinear, we just need to make sure that 
+        the area of the triangle created by a, b and c is equal to 0, or below some 
+        tolerance.
+        """
+        
+        area = abs((a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) / 2)
+        print("Area of a: {0} || b: {1} || c: {2} || is {3} || Tolerance: {4} || Colinear?: {5}".format((a.x, a.y), (b.x, b.y), (c.x, c.y), area, tolerance, area < tolerance))
+        return  area < tolerance
+
+    def dot_product_three_points(self, a, b, c):
+        v1 = (c.x - a.x, c.y - a.y)
+        v2 = (b.x - a.x, b.y - a.y)
+        dp = self.dot_product(v1, v2)
+        print("V1:", v1, "|| V2:", v2, "|| DP:", dp)
+        return dp
+
+    @staticmethod
+    def dot_product(v1, v2):
+        return (v1[0] * v2[0]) + (v1[1] * v2[1])

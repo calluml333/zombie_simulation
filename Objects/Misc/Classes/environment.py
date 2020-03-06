@@ -48,7 +48,6 @@ class Environment:
         
         for member_id in population:
             member = population[member_id]
-
             pygame.draw.circle(self.game_display, member.color, (member.x, member.y), member.size)
             
             if member.is_type == 'Human' and member.is_player:
@@ -61,7 +60,7 @@ class Environment:
             elif member.is_type == 'Weapon' and member.picked_up:
                 member.track_agent()
                 if 'gun' in member.weapon_name.lower():
-                    self.fire_gun(member)
+                    self.track_gun(member, population)
 
             member.check_bounds()
         pygame.display.update()
@@ -93,8 +92,7 @@ class Environment:
                                 self.human_to_zombie(population, member_id)
                                 break
                             elif sum_members == '2':
-                                population[member_id].pick_up_weapon(population[other_member_id])
-                                
+                                population[member_id].pick_up_weapon(population[other_member_id])     
         return population
            
     def human_to_zombie(self, population, human_id):
@@ -163,18 +161,33 @@ class Environment:
         elif choice == 3:
             agent.move_west()
             
-    def fire_gun(self, gun):
+    def track_gun(self, gun, population):
         keys_pressed = pygame.key.get_pressed()
         if keys_pressed[pygame.K_SPACE]:
-            gun.fire()   
+            self.fire_gun(gun)
         if keys_pressed[pygame.K_a]:
             target = gun.aim(1)
         elif keys_pressed[pygame.K_d]:
             target = gun.aim(-1)
         else:
             pass
-        pygame.draw.line(self.game_display, pygame.Color("red"), gun.owner_vector, gun.target, 2)
-        pygame.display.update()
+        try:
+            col = self.determine_if_in_range(gun, population)
+        except:
+            col = pygame.Color("red")
+        pygame.draw.line(self.game_display, col, gun.owner_vector, gun.target, 2)
+
+    def determine_if_in_range(self, gun, population):
+        for agent_id, agent in population.copy().items():
+            if gun != agent and gun.owner != agent:
+                if gun.is_agent_in_range(agent):
+                    return pygame.Color("green1")
+                else:
+                    return pygame.Color("red")
+    
+    def fire_gun(self, gun):
+        print("BOOOM")
+        
 
 
 if __name__ == "__main__":
