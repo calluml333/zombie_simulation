@@ -163,18 +163,16 @@ class Environment:
             
     def track_gun(self, gun, population):
         keys_pressed = pygame.key.get_pressed()
+        try:
+            col = self.determine_if_in_range(gun, population)
+        except:
+            col = pygame.Color("red")
         if keys_pressed[pygame.K_SPACE]:
             self.fire_gun(gun)
         if keys_pressed[pygame.K_a]:
             target = gun.aim(1)
         elif keys_pressed[pygame.K_d]:
             target = gun.aim(-1)
-        else:
-            pass
-        try:
-            col = self.determine_if_in_range(gun, population)
-        except:
-            col = pygame.Color("red")
         pygame.draw.line(self.game_display, col, gun.owner_vector, gun.target, 2)
 
     def determine_if_in_range(self, gun, population):

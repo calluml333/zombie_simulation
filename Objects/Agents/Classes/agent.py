@@ -59,11 +59,6 @@ class Agent(Element, IAgent):
 
     def move_west(self):
         self.x += self.speed * -1
-
-    def calc_distance_to_agent(self, agent):
-        self_coords = (self.x, self.y)
-        agent_cords = (agent.x, agent.y)
-        return np.sqrt(sum([(a - b) ** 2 for a, b in zip(self_coords, agent_cords)]))
               
     def find_nearest_human(self, population):
         nearest_human = False

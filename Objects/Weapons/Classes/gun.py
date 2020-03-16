@@ -44,12 +44,12 @@ class Gun(IGun, Weapon):
         To check whether an agent (at point C) is in range of the gun, whos owner is at point A
         and target point is at B, we need to carry out three steps:
             1. Check that A, B and C are collinear;
-            2. Check that the dot product of (B - A) and (C - A) > 0;
+            2. Check that the distance between the angent and the gun is <= the range of the gun.
         """
         collinear = self.are_points_collinear(self.owner, self.target, agent, self.accuracy)
-        dot_product = self.dot_product_three_points(self.owner, self.target, agent)
-        
-        if collinear and dot_product > 0:
+        distance = self.calc_distance_to_agent(agent)
+
+        if collinear and distance <= self.fire_range:
            return True
         else:
             return False

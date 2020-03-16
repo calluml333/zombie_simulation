@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from ..Interfaces.IElement import IElement
 
 
@@ -48,6 +49,11 @@ class Element(IElement):
             self.y = 0
         elif self.y > self.y_boundary: 
             self.y = self.y_boundary
+
+    def calc_distance_to_agent(self, agent):
+        self_coords = (self.x, self.y)
+        agent_cords = (agent.x, agent.y)
+        return np.sqrt(sum([(a - b) ** 2 for a, b in zip(self_coords, agent_cords)]))
 
     @staticmethod
     def are_points_collinear(a, b, c, tolerance=0):
